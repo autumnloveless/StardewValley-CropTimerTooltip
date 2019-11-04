@@ -1,0 +1,10 @@
+{
+  "Name": "CropTimerTooltip",
+  "Author": "Autumn Loveless",
+  "Version": "1.0.0",
+  "Description": "A tooltip with the time left on a crop",
+  "UniqueID": "ALoveless.CropTimerTooltip",
+  "EntryDll": "CropTimerTooltip.dll",
+  "MinimumApiVersion": "2.10.0",
+  "UpdateKeys": []
+}
