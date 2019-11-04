@@ -7,6 +7,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
+using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 
 namespace CropTimerTooltip
@@ -111,7 +112,7 @@ namespace CropTimerTooltip
             var num1 = 64;
             Vector2 textboxSize;
             var spriteBatch = Game1.spriteBatch;
-            if (harvestTimeLeft != "")
+            if (harvestTimeLeft != "" && harvestTimeLeft.Length > crop_name.Length)
                 textboxSize = text_box_font.MeasureString(harvestTimeLeft);
             else
                 textboxSize = text_box_font.MeasureString(crop_name);
@@ -167,7 +168,36 @@ namespace CropTimerTooltip
                 int.TryParse(objectAtTile.ParentSheetIndex.ToString(), out result) &&
                 wild_seed_indices.Contains(result))
             {
+                Monitor.Log("objectAtTile and the other basic stuff!!", (LogLevel)1);
+
                 crop_name = CropIndexToName(result);
+            }
+            else if(objectAtTile != null)
+            {
+                int daysLeft;
+                int hoursLeft;
+                int minutesLeft;
+
+                if (objectAtTile.name == "Cask")
+                {
+                    var cask = (objectAtTile as Cask);
+                    harvestTimeLeft = $"{(cask.daysToMature)}d";
+                    crop_name = cask.Name;
+                }
+                else if(objectAtTile.bigCraftable.Value)
+                {
+                    if (objectAtTile.MinutesUntilReady != 0)
+                    {
+
+                        daysLeft = (int)(objectAtTile.MinutesUntilReady / (18.0f * 60.0f));
+                        hoursLeft = (int)((objectAtTile.MinutesUntilReady % (18.0f * 60.0f)) / 60.0f);
+                        minutesLeft = (int)(objectAtTile.MinutesUntilReady % 60.0f);
+
+                        harvestTimeLeft = $"{daysLeft}d {hoursLeft}h {minutesLeft}m";
+                    }
+
+                    crop_name = objectAtTile.Name;
+                }
             }
             else
             {
@@ -264,7 +294,10 @@ namespace CropTimerTooltip
             else
                 cropName.Add(string.Format("Harvest in {0} {1}", daysLeftToGrow, daysLeftToGrow != 1 ? "days" : "day"));
 
-            return string.Format("Harvest in {0} {1}", daysLeftToGrow, daysLeftToGrow != 1 ? "days" : "day");
+            if (daysLeftToGrow == 0)
+                return string.Format("Ready to harvest!");
+            else
+                return string.Format("Harvest in {0} {1}", daysLeftToGrow, daysLeftToGrow == 1 ? "days" : "day");
         }
 
         private string CropIndexToName(int some_index)
@@ -277,7 +310,10 @@ namespace CropTimerTooltip
 
         private bool OnCropLocation(string new_location)
         {
-            return work_everywhere || new_location.Equals("Farm") || new_location.Equals("Greenhouse");
+            return work_everywhere || new_location.Equals("Farm") || new_location.Equals("Greenhouse")
+            || new_location.Equals("Barn") || new_location.Equals("Big Barn") || new_location.Equals("Deluxe Barn")
+            || new_location.Equals("Coop") || new_location.Equals("Big Coop") || new_location.Equals("Deluxe Coop")
+            || new_location.Equals("Cellar") || new_location.Equals("Shed");
         }
 
         private void ClearCursorState()
