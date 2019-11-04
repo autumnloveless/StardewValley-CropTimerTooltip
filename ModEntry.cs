@@ -297,7 +297,7 @@ namespace CropTimerTooltip
             if (daysLeftToGrow == 0)
                 return string.Format("Ready to harvest!");
             else
-                return string.Format("Harvest in {0} {1}", daysLeftToGrow, daysLeftToGrow == 1 ? "days" : "day");
+                return string.Format("Harvest in {0} {1}", daysLeftToGrow, daysLeftToGrow != 1 ? "days" : "day");
         }
 
         private string CropIndexToName(int some_index)
