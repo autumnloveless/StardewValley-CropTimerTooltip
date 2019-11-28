@@ -6,5 +6,5 @@
   "UniqueID": "ALoveless.CropTimerTooltip",
   "EntryDll": "CropTimerTooltip.dll",
   "MinimumApiVersion": "2.10.0",
-  "UpdateKeys": []
+  "UpdateKeys": [ "GitHub:autumnloveless/StardewValley-CropTimerTooltip" ]
 }
